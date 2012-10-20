@@ -7,7 +7,17 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all(:order => params[:sort])
+    #set the listing of possible ratings
+    @all_ratings = Movie.all_ratings
+
+    #set the active ratings that are being used for filtering based on passed in params
+    @active_ratings =  params[:ratings].nil? ? {} : params[:ratings]
+
+    p "@active_ratings"
+    p @active_ratings.inspect
+
+    #get movies ordered by directional sort and by a given rating if applicable
+    @movies = Movie.all(:order => params[:sort], :conditions => @active_ratings.blank? ? @active_ratings : {:rating => @active_ratings.keys})
   end
 
   def new
