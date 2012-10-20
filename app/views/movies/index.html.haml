@@ -4,14 +4,14 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]", rating, @active_ratings.include?(rating) #todo need to figure out why I have to set the value and what it should be, the magic that is ratings[#{rating}] that creates the hash for the controller, versus my array
+    = check_box_tag "ratings[#{rating}]", rating, @active_ratings.include?(rating)
   = submit_tag  'Refresh', :id => "ratings_submit"
 %table#movies
   %thead
     %tr
-      %th{:class => ("hilite" if params[:sort] == "title ASC")}= link_to "Movie Title", movies_path(:sort=> "title ASC", :ratings => @active_ratings), :id =>"title_header"
+      %th{:class => ("hilite" if params[:sort] == "title ASC" or session[:sort] == "title ASC")}= link_to "Movie Title", movies_path(:sort=> "title ASC", :ratings => @active_ratings), :id =>"title_header"
       %th Rating
-      %th{:class => ("hilite" if params[:sort] == "release_date ASC")}= link_to "Release Date", movies_path(:sort => "release_date ASC", :ratings => @active_ratings), :id => "release_date_header"
+      %th{:class => ("hilite" if params[:sort] == "release_date ASC" or session[:sort] == "release_date ASC")}= link_to "Release Date", movies_path(:sort => "release_date ASC", :ratings => @active_ratings), :id => "release_date_header"
       %th More Info
   %tbody
     - @movies.each do |movie|
