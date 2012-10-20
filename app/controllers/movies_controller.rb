@@ -11,13 +11,15 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
 
     #set the active ratings that are being used for filtering based on passed in params
-    @active_ratings =  params[:ratings].nil? ? {} : params[:ratings]
+    #todo this is a double ternary; need to figure out I could pass the active ratings back to the controller in another fashion, versus having the magic of the checkboxtag
+    #todo and the hash that will go along with it
+    @active_ratings =  params[:ratings].blank? ? @all_ratings.each { |rating| rating  } : params[:ratings].is_a?(Hash) ? params[:ratings].keys : params[:ratings]
 
     p "@active_ratings"
     p @active_ratings.inspect
 
     #get movies ordered by directional sort and by a given rating if applicable
-    @movies = Movie.all(:order => params[:sort], :conditions => @active_ratings.blank? ? @active_ratings : {:rating => @active_ratings.keys})
+    @movies = Movie.all(:order => params[:sort], :conditions => {:rating => @active_ratings})
   end
 
   def new
