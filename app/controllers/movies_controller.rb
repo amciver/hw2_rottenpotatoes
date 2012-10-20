@@ -13,13 +13,40 @@ class MoviesController < ApplicationController
     #set the active ratings that are being used for filtering based on passed in params
     #todo this is a double ternary; need to figure out I could pass the active ratings back to the controller in another fashion, versus having the magic of the checkboxtag
     #todo and the hash that will go along with it
-    @active_ratings =  params[:ratings].blank? ? @all_ratings.each { |rating| rating  } : params[:ratings].is_a?(Hash) ? params[:ratings].keys : params[:ratings]
+    #@active_ratings =  params[:ratings].blank? ? @all_ratings.each { |rating| rating  } : params[:ratings].is_a?(Hash) ? params[:ratings].keys : params[:ratings]
 
-    p "@active_ratings"
-    p @active_ratings.inspect
+    p "params[:ratings]"
+    p params[:ratings].inspect
+
+    if params[:ratings].blank?
+      @active_ratings = session[:ratings].blank? ? @all_ratings.each { |rating| rating  } : session[:ratings]
+      if !flash[:notice].blank?
+        flash.keep(:notice)
+      end
+      redirect_to movies_path(:sort=> session[:sort], :ratings => @active_ratings)
+    elsif params[:ratings].is_a?(Hash)
+       @active_ratings = params[:ratings].keys
+    else
+       @active_ratings = params[:ratings]
+    end
+    #@active_ratings =  params[:ratings].blank? ? session[:ratings] : params[:ratings].is_a?(Hash) ? params[:ratings].keys : params[:ratings]
+    session[:ratings] = @active_ratings
+
+    #p "@active_ratings"
+    #p @active_ratings.inspect
+
+    if params[:sort].blank?
+      @active_sort = session[:sort]
+    else
+      @active_sort = params[:sort]
+    end
+    session[:sort] = @active_sort
+
+    #@active_sort = params[:sort].blank? ? {} : params[:sort]
+    #session[:sort => @active_sort]
 
     #get movies ordered by directional sort and by a given rating if applicable
-    @movies = Movie.all(:order => params[:sort], :conditions => {:rating => @active_ratings})
+    @movies = Movie.all(:order => @active_sort, :conditions => {:rating => @active_ratings})
   end
 
   def new

@@ -4,8 +4,7 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    #todo need to figure out why I have to set the value and what it should be, the magic that is ratings[#{rating}] that creates the hash for the controller, versus my array
-    = check_box_tag "ratings[#{rating}]", rating, @active_ratings.include?(rating)
+    = check_box_tag "ratings[#{rating}]", rating, @active_ratings.include?(rating) #todo need to figure out why I have to set the value and what it should be, the magic that is ratings[#{rating}] that creates the hash for the controller, versus my array
   = submit_tag  'Refresh', :id => "ratings_submit"
 %table#movies
   %thead
