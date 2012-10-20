@@ -11,12 +11,9 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
 
     #set the active ratings that are being used for filtering based on passed in params
-    #todo this is a double ternary; need to figure out I could pass the active ratings back to the controller in another fashion, versus having the magic of the checkboxtag
-    #todo and the hash that will go along with it
-    #@active_ratings =  params[:ratings].blank? ? @all_ratings.each { |rating| rating  } : params[:ratings].is_a?(Hash) ? params[:ratings].keys : params[:ratings]
 
-    p "params[:ratings]"
-    p params[:ratings].inspect
+    #p "params[:ratings]"
+    #p params[:ratings].inspect
 
     if params[:ratings].blank?
       @active_ratings = session[:ratings].blank? ? @all_ratings.each { |rating| rating  } : session[:ratings]
@@ -29,7 +26,7 @@ class MoviesController < ApplicationController
     else
        @active_ratings = params[:ratings]
     end
-    #@active_ratings =  params[:ratings].blank? ? session[:ratings] : params[:ratings].is_a?(Hash) ? params[:ratings].keys : params[:ratings]
+    #set the session data  for ratings for use later
     session[:ratings] = @active_ratings
 
     #p "@active_ratings"
@@ -40,10 +37,8 @@ class MoviesController < ApplicationController
     else
       @active_sort = params[:sort]
     end
+    #set the sort data in the session for use later
     session[:sort] = @active_sort
-
-    #@active_sort = params[:sort].blank? ? {} : params[:sort]
-    #session[:sort => @active_sort]
 
     #get movies ordered by directional sort and by a given rating if applicable
     @movies = Movie.all(:order => @active_sort, :conditions => {:rating => @active_ratings})
